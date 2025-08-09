@@ -11,8 +11,9 @@ import (
 )
 
 func main() {
-	isDup := flag.Bool("dup", false, "Allow duplicate word if set to true")
-	minLen := flag.Int("minlen", -1, "Minimum word length. minlen < 0 allows any length")
+	isDup := flag.Bool("dup", false, "Allow duplicate words if true")
+	minLen := flag.Int("minlen", -1, "Minimum word length. minlen < 0 allows any lengths")
+	maxLen := flag.Int("maxlen", -1, "Maximum word length. maxlen < 0 allows any lengths")
 	help := flag.Bool("h", false, "Show help message")
 	flag.Parse()
 
@@ -40,8 +41,8 @@ func main() {
 
 	wordList, count := NewWordList(&Options{
 		MinLength: *minLen,
+		MaxLength: *maxLen,
 	})
-	fmt.Printf("count=%d\n", count)
 	if count == 0 {
 		fmt.Printf("%s: no words after filter", prog)
 		os.Exit(2)

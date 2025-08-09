@@ -15,14 +15,17 @@ type Node struct {
 
 type Options struct {
 	MinLength int
+	MaxLength int
 }
 
 func NewWordList(opts *Options) (*Node, int) {
 	words := strings.Split(strings.TrimRight(wordtxt, "\n"), "\n")
 
 	minLen := -1
+	maxLen := -1
 	if opts != nil {
 		minLen = opts.MinLength
+		maxLen = opts.MaxLength
 	}
 
 	var head *Node
@@ -32,6 +35,12 @@ func NewWordList(opts *Options) (*Node, int) {
 	for i := 0; i < len(words); i++ {
 		// Filter word by minimum length
 		if minLen > 0 && len(words[i]) < minLen {
+			totalWords--
+			continue
+		}
+
+		// Filter word by maximum length
+		if maxLen > 0 && len(words[i]) > maxLen {
 			totalWords--
 			continue
 		}
