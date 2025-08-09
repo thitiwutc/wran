@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/rand"
+	"flag"
 	"fmt"
 	"math/big"
 	"os"
@@ -9,15 +10,19 @@ import (
 )
 
 func main() {
+	isDup := flag.Bool("dup", false, "Allow duplicate word if set to true")
+	flag.Parse()
+
+	args := flag.Args()
 	prog := os.Args[0]
-	if len(os.Args) != 2 {
+	if len(args) != 1 {
 		fmt.Printf("%s: invalid number of arguments\n", prog)
 		printUsage(prog)
 
 		os.Exit(1)
 	}
 
-	n, err := strconv.Atoi(os.Args[1])
+	n, err := strconv.Atoi(args[0])
 	if err != nil {
 		fmt.Printf("%s: invalid word count\n", prog)
 		printUsage(prog)
@@ -26,6 +31,7 @@ func main() {
 
 	wordList, count := NewWordList()
 
+	// Random n word(s)
 	for range n {
 		r, err := rand.Int(rand.Reader, big.NewInt(int64(count)))
 		if err != nil {
@@ -33,11 +39,33 @@ func main() {
 			os.Exit(2)
 		}
 
-		head := wordList
+		cur := wordList
 		one := big.NewInt(1)
-		for ; r.Int64() > 0; r, head = r.Sub(r, one), head.Next {
+		var prev *Node
+		for ; r.Int64() > 0; r, cur, prev = r.Sub(r, one), cur.Next, cur {
 		}
-		fmt.Printf("%s\n", head.Word)
+
+		// Remove the random word from the list to prevent word duplication.
+		if !*isDup {
+			if prev == nil {
+				// Remove the first word.
+				wordList = wordList.Next
+			} else if cur.Next == nil {
+				// Remove the last word.
+				prev.Next = nil
+			} else {
+				// Remove the middle word.
+				prev.Next = cur.Next
+			}
+			count--
+
+			// No more word in list.
+			if count == 0 {
+				break
+			}
+		}
+
+		fmt.Printf("%s\n", cur.Word)
 	}
 }
 
