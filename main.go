@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"flag"
 	"fmt"
+	"io"
 	"math/big"
 	"os"
 	"strconv"
@@ -17,7 +18,7 @@ func main() {
 	prog := os.Args[0]
 	if len(args) != 1 {
 		fmt.Printf("%s: invalid number of arguments\n", prog)
-		printUsage(prog)
+		printUsage(prog, os.Stderr)
 
 		os.Exit(1)
 	}
@@ -25,7 +26,7 @@ func main() {
 	n, err := strconv.Atoi(args[0])
 	if err != nil {
 		fmt.Printf("%s: invalid word count\n", prog)
-		printUsage(prog)
+		printUsage(prog, os.Stderr)
 		os.Exit(1)
 	}
 
@@ -69,6 +70,8 @@ func main() {
 	}
 }
 
-func printUsage(prog string) {
-	fmt.Printf("%s: WORD_COUNT\n", prog)
+func printUsage(prog string, w io.Writer) {
+	fmt.Fprintf(w, "%s: WORD_COUNT\n\n", prog)
+	fmt.Fprintf(w, "Options:\n")
+	flag.PrintDefaults()
 }
