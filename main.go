@@ -12,11 +12,17 @@ import (
 
 func main() {
 	isDup := flag.Bool("dup", false, "Allow duplicate word if set to true")
-	// help := flag.Bool("h", false, "Show help message")
+	help := flag.Bool("h", false, "Show help message")
 	flag.Parse()
 
-	args := flag.Args()
 	prog := os.Args[0]
+
+	if *help {
+		printUsage(prog, os.Stdout)
+		os.Exit(0)
+	}
+
+	args := flag.Args()
 	if len(args) != 1 {
 		fmt.Printf("%s: invalid number of arguments\n", prog)
 		printUsage(prog, os.Stderr)
