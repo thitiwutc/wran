@@ -12,6 +12,7 @@ import (
 
 func main() {
 	isDup := flag.Bool("dup", false, "Allow duplicate word if set to true")
+	// help := flag.Bool("h", false, "Show help message")
 	flag.Parse()
 
 	args := flag.Args()
@@ -71,7 +72,7 @@ func main() {
 }
 
 func printUsage(prog string, w io.Writer) {
-	fmt.Fprintf(w, "%s: WORD_COUNT\n\n", prog)
+	fmt.Fprintf(w, "Usage: %s WORD_COUNT\n\n", prog)
 	fmt.Fprintf(w, "Options:\n")
 	flag.PrintDefaults()
 }
