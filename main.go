@@ -41,13 +41,18 @@ func main() {
 	wordList, count := NewWordList(&Options{
 		MinLength: *minLen,
 	})
+	fmt.Printf("count=%d\n", count)
+	if count == 0 {
+		fmt.Printf("%s: no words after filter", prog)
+		os.Exit(2)
+	}
 
 	// Random n word(s)
 	for range n {
 		r, err := rand.Int(rand.Reader, big.NewInt(int64(count)))
 		if err != nil {
 			fmt.Printf("%s: %s\n", prog, err)
-			os.Exit(2)
+			os.Exit(3)
 		}
 
 		cur := wordList
