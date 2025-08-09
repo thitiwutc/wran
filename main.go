@@ -78,7 +78,7 @@ func main() {
 }
 
 func printUsage(prog string, w io.Writer) {
-	fmt.Fprintf(w, "Usage: %s WORD_COUNT\n\n", prog)
+	fmt.Fprintf(w, "Usage: %s [OPTION]... WORD_COUNT\n\n", prog)
 	fmt.Fprintf(w, "Options:\n")
 	flag.PrintDefaults()
 }
