@@ -13,22 +13,43 @@ type Node struct {
 	Next *Node
 }
 
-func NewWordList() (*Node, int) {
+type Options struct {
+	MinLength int
+}
+
+func NewWordList(opts *Options) (*Node, int) {
 	words := strings.Split(strings.TrimRight(wordtxt, "\n"), "\n")
 
-	head := new(Node)
-	head.Word = words[0]
-	prev := head
+	minLen := -1
+	if opts != nil {
+		minLen = opts.MinLength
+	}
 
-	for i := 1; i < len(words); i++ {
+	var head *Node
+	var prev *Node
+	totalWords := len(words)
+
+	for i := 0; i < len(words); i++ {
+		// Filter word by minimum length
+		if minLen > 0 && len(words[i]) < minLen {
+			totalWords--
+			continue
+		}
+
 		cur := Node{
 			Word: words[i],
 			Next: nil,
+		}
+
+		if head == nil {
+			head = &cur
+			prev = head
+			continue
 		}
 
 		prev.Next = &cur
 		prev = &cur
 	}
 
-	return head, len(words)
+	return head, totalWords
 }

@@ -12,6 +12,7 @@ import (
 
 func main() {
 	isDup := flag.Bool("dup", false, "Allow duplicate word if set to true")
+	minLen := flag.Int("minlen", -1, "Minimum word length. minlen < 0 allows any length")
 	help := flag.Bool("h", false, "Show help message")
 	flag.Parse()
 
@@ -37,7 +38,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	wordList, count := NewWordList()
+	wordList, count := NewWordList(&Options{
+		MinLength: *minLen,
+	})
 
 	// Random n word(s)
 	for range n {
