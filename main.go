@@ -111,5 +111,6 @@ func version() string {
 func printUsage(prog string, w io.Writer) {
 	fmt.Fprintf(w, "Usage: %s [OPTION]... WORD_COUNT\n\n", prog)
 	fmt.Fprintf(w, "Options:\n")
+	flag.CommandLine.SetOutput(w)
 	flag.PrintDefaults()
 }
