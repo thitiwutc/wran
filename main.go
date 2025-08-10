@@ -7,6 +7,8 @@ import (
 	"io"
 	"math/big"
 	"os"
+	"regexp"
+	"runtime/debug"
 	"strconv"
 )
 
@@ -14,13 +16,19 @@ func main() {
 	isDup := flag.Bool("dup", false, "Allow duplicate words if true")
 	minLen := flag.Int("minlen", -1, "Minimum word length. minlen < 0 allows any lengths")
 	maxLen := flag.Int("maxlen", -1, "Maximum word length. maxlen < 0 allows any lengths")
-	help := flag.Bool("h", false, "Show help message")
+	help := flag.Bool("h", false, "Print help message")
+	printVer := flag.Bool("v", false, "Print version")
 	flag.Parse()
 
 	prog := os.Args[0]
 
 	if *help {
 		printUsage(prog, os.Stdout)
+		os.Exit(0)
+	}
+
+	if *printVer {
+		fmt.Println(version())
 		os.Exit(0)
 	}
 
@@ -84,6 +92,20 @@ func main() {
 
 		fmt.Printf("%s\n", cur.Word)
 	}
+}
+
+func version() string {
+	buildInfo, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "unknown"
+	}
+
+	matched, _ := regexp.MatchString(`v\d+\.\d+\.\d+`, buildInfo.Main.Version)
+	if matched {
+		return buildInfo.Main.Version
+	}
+
+	return "unknown"
 }
 
 func printUsage(prog string, w io.Writer) {
