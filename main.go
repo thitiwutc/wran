@@ -20,7 +20,7 @@ func main() {
 	printVer := flag.Bool("v", false, "Print version")
 	flag.Parse()
 
-	prog := os.Args[0]
+	prog := "wran"
 
 	if *help {
 		printUsage(prog, os.Stdout)
