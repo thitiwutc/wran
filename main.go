@@ -32,17 +32,19 @@ func main() {
 		os.Exit(0)
 	}
 
+	wordCount := 10
 	args := flag.Args()
-	if len(args) != 1 {
-		fmt.Printf("%s: invalid number of arguments\n", prog)
-		printUsage(prog, os.Stderr)
+	// Use default word count.
+	if len(args) == 1 {
+		n, err := strconv.Atoi(args[0])
+		if err != nil {
+			fmt.Printf("%s: invalid word count\n", prog)
+			printUsage(prog, os.Stderr)
+			os.Exit(1)
+		}
 
-		os.Exit(1)
-	}
-
-	n, err := strconv.Atoi(args[0])
-	if err != nil {
-		fmt.Printf("%s: invalid word count\n", prog)
+		wordCount = n
+	} else if len(args) > 1 {
 		printUsage(prog, os.Stderr)
 		os.Exit(1)
 	}
@@ -57,7 +59,7 @@ func main() {
 	}
 
 	// Random n word(s)
-	for range n {
+	for range wordCount {
 		r, err := rand.Int(rand.Reader, big.NewInt(int64(count)))
 		if err != nil {
 			fmt.Printf("%s: %s\n", prog, err)
