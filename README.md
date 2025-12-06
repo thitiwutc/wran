@@ -5,7 +5,7 @@ Basic english words randomizer
 
 ```sh
 $ wran -h
-Usage: ./wran [OPTION]... WORD_COUNT
+Usage: wran [OPTION]... WORD_COUNT
 Options:
   -dup
     	Allow duplicate words if true
