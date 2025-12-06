@@ -17,7 +17,7 @@ func main() {
 	minLen := flag.Int("minlen", -1, "Minimum word length. minlen < 0 allows any lengths")
 	maxLen := flag.Int("maxlen", -1, "Maximum word length. maxlen < 0 allows any lengths")
 	help := flag.Bool("h", false, "Print help message")
-	printVer := flag.Bool("v", false, "Print version")
+	printVer := flag.Bool("V", false, "Print version")
 	flag.Parse()
 
 	prog := "wran"
