@@ -5,12 +5,19 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"math"
 	"math/big"
 	"os"
 	"regexp"
 	"runtime/debug"
+	"sort"
 	"strconv"
+	"strings"
+
+	"golang.org/x/crypto/ssh/terminal"
 )
+
+const maxWordsPerLine = 10
 
 func main() {
 	isDup := flag.Bool("dup", false, "Allow duplicate words if true")
@@ -58,6 +65,8 @@ func main() {
 		os.Exit(2)
 	}
 
+	randWords := make([]string, 0, wordCount)
+
 	// Random n word(s)
 	for range wordCount {
 		r, err := rand.Int(rand.Reader, big.NewInt(int64(count)))
@@ -92,7 +101,55 @@ func main() {
 			}
 		}
 
-		fmt.Printf("%s\n", cur.Word)
+		randWords = append(randWords, cur.Word)
+	}
+
+	var longestWordLen int
+	for _, word := range randWords {
+		longestWordLen = max(longestWordLen, len(word))
+	}
+	sort.Strings(randWords)
+
+	var sb strings.Builder
+
+	fd := int(os.Stdout.Fd())
+	if terminal.IsTerminal(fd) {
+		width, _, err := terminal.GetSize(fd)
+		if err != nil {
+			fmt.Printf("get terminal size failed: %v\n", err)
+			os.Exit(4)
+		}
+
+		itemsPerLine := float64(width) / float64(longestWordLen) * 0.6
+		itemsPerLine = min(itemsPerLine, maxWordsPerLine)
+		itemsPerLineInt := int(math.Floor(itemsPerLine))
+
+		for i, word := range randWords {
+			if i > 0 {
+				if i%itemsPerLineInt == 0 {
+					sb.WriteRune('\n')
+				} else {
+					sb.Write([]byte("  "))
+				}
+			}
+
+			if wordCount > itemsPerLineInt {
+				sb.WriteString(fmt.Sprintf("%-*s", longestWordLen, word))
+			} else {
+				// No padding if output is only 1 line.
+				sb.WriteString(word)
+			}
+		}
+
+		fmt.Println(sb.String())
+	} else {
+		// Print newline-separated words for non-terminal output.
+		for _, word := range randWords {
+			sb.WriteString(word)
+			sb.WriteRune('\n')
+		}
+
+		fmt.Print(sb.String())
 	}
 }
 
