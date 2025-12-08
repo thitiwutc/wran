@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"strings"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 const maxWordsPerLine = 10
@@ -113,8 +113,8 @@ func main() {
 	var sb strings.Builder
 
 	fd := int(os.Stdout.Fd())
-	if terminal.IsTerminal(fd) {
-		width, _, err := terminal.GetSize(fd)
+	if term.IsTerminal(fd) {
+		width, _, err := term.GetSize(fd)
 		if err != nil {
 			fmt.Printf("get terminal size failed: %v\n", err)
 			os.Exit(4)
