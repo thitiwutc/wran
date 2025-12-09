@@ -21,6 +21,7 @@ const maxWordsPerLine = 10
 
 func main() {
 	isDup := flag.Bool("dup", false, "Allow duplicate words if true")
+	exactLen := flag.Int("exactlen", -1, "Exact word length. This option nullifies -minlen and -maxlen options. exactlen < 0 allows any lengths")
 	minLen := flag.Int("minlen", -1, "Minimum word length. minlen < 0 allows any lengths")
 	maxLen := flag.Int("maxlen", -1, "Maximum word length. maxlen < 0 allows any lengths")
 	help := flag.Bool("h", false, "Print help message")
@@ -57,8 +58,9 @@ func main() {
 	}
 
 	wordList, count := NewWordList(&Options{
-		MinLength: *minLen,
-		MaxLength: *maxLen,
+		ExactLength: *exactLen,
+		MinLength:   *minLen,
+		MaxLength:   *maxLen,
 	})
 	if count == 0 {
 		fmt.Printf("%s: no words after filter", prog)

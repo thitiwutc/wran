@@ -14,8 +14,9 @@ type Node struct {
 }
 
 type Options struct {
-	MinLength int
-	MaxLength int
+	ExactLength int
+	MinLength   int
+	MaxLength   int
 }
 
 func NewWordList(opts *Options) (*Node, int) {
@@ -23,9 +24,17 @@ func NewWordList(opts *Options) (*Node, int) {
 
 	minLen := -1
 	maxLen := -1
+	exactLen := -1
 	if opts != nil {
 		minLen = opts.MinLength
 		maxLen = opts.MaxLength
+		exactLen = opts.ExactLength
+	}
+
+	// Nullify min length and max length filters if exact length is larger than 0.
+	if exactLen > 0 {
+		minLen = -1
+		maxLen = -1
 	}
 
 	var head *Node
@@ -41,6 +50,12 @@ func NewWordList(opts *Options) (*Node, int) {
 
 		// Filter word by maximum length
 		if maxLen > 0 && len(words[i]) > maxLen {
+			totalWords--
+			continue
+		}
+
+		// Filter word by exact length
+		if exactLen > 0 && len(words[i]) != exactLen {
 			totalWords--
 			continue
 		}
