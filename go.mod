@@ -1,4 +1,4 @@
-module github.com/thitiwutc/wran
+module gitlab.com/thitiwut.chu/wran
 
 go 1.24.0
 
